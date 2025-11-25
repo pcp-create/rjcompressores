@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Apresentação Power BI</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    iframe {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="dashboard" src=""></iframe>
+
+  <script>
+    var links = [
+      "https://app.powerbi.com/view?r=eyJrIjoiNTljYmY2NTctNTQ4Yi00ZWU5LWEyMjctOTFjN2UwM2RiODY3IiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // FAROL LOCAÇÃO
+      "https://app.powerbi.com/view?r=eyJrIjoiODJhMzFiM2YtNmNjNS00OWNkLWIyMTMtNWRmMmViMjJmNjY3IiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // Números de Locação
+      "https://app.powerbi.com/view?r=eyJrIjoiYjNkODExNTItYmMzMC00ZDc4LTk5MTMtMmE0NDM2YTE2ZDA3IiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // Locação
+      "https://app.powerbi.com/view?r=eyJrIjoiMTE1NDM3YTgtNDQ1ZS00ODIzLThjYzctZDJkN2I2N2NkYjI3IiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // Equipamentos em Revisão
+      "https://app.powerbi.com/view?r=eyJrIjoiMDBhNjU1ZjEtYjBhMC00ZmE4LWJmZjgtODY4NzNmYjQwOWUwIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // FAROL OFICINA CLIENTES
+      "https://app.powerbi.com/view?r=eyJrIjoiOTJjNDhiNWEtODIxNy00MGMwLThhNjEtYTdhYzA0Y2Y2MWQ2IiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // VOLUMES OFICINA
+      "https://app.powerbi.com/view?r=eyJrIjoiMDdjYTk4ZDUtYjg5Ny00ZWE0LWFmMWEtOGJmNTAwZWY4YTdkIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // FAROL TERCEIRO
+      "https://app.powerbi.com/view?r=eyJrIjoiM2VkNTgyYTktYzY0Ni00MjY3LWJlYmYtNjUwYjAyNjcxNjNmIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9", // APONTAMENTO
+      "https://app.powerbi.com/view?r=eyJrIjoiYmM5MmJmNGItMTE2Ni00NjAxLTkzYjQtYTFmMjg1NmU3Y2M1IiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9" // NPS - PESQUISA DE SATISFAÇÃO
+    ];
+
+    var current = 0;
+    var iframe = document.getElementById("dashboard");
+
+    function mostrarProximoRelatorio() {
+      iframe.src = links[current];
+      current = (current + 1) % links.length;
+    }
+
+    mostrarProximoRelatorio();
+    setInterval(mostrarProximoRelatorio, 30000); // troca a cada 30 segundos
+  </script>
+</body>
+</html>
+
