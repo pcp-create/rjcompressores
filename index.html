@@ -67,9 +67,9 @@
       "https://app.powerbi.com/view?r=eyJrIjoiNDYzMTJhYjYtNjY2OS00MjVhLWJkMTctOWY2N2VmNzY0NzJiIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9&pageName=49750493aeb10692c370" // Externo RJ
     ];
 
-    const INTERVAL_MS = 60000;     // 1 minuto
+    const INTERVAL_MS = 120000;     // 2 minuto
     const FADE_MS = 500;           // igual ao CSS
-    const LOAD_TIMEOUT_MS = 12000; // fallback: se não carregar em 12s, troca mesmo assim
+    const LOAD_TIMEOUT_MS = 20000; // fallback: se não carregar em 12s, troca mesmo assim
 
     const frameA = document.getElementById("frameA");
     const frameB = document.getElementById("frameB");
@@ -173,3 +173,4 @@
   </script>
 </body>
 </html>
+
