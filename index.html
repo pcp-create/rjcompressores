@@ -1,50 +1,124 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Apresentação Power BI</title>
   <style>
-    body {
+    html, body {
       margin: 0;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
+      background: #000; /* evita flash branco do navegador */
     }
-    iframe {
+
+    .frame {
       position: absolute;
+      inset: 0;
       width: 100vw;
       height: 100vh;
-      border: none;
+      border: 0;
+      opacity: 0;
+      transition: opacity 500ms ease; /* fade */
+      will-change: opacity;
+    }
+
+    .frame.visible {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <iframe id="dashboard" src=""></iframe>
+  <!-- Dois iframes para pré-carregar -->
+  <iframe id="frameA" class="frame"></iframe>
+  <iframe id="frameB" class="frame"></iframe>
 
   <script>
-    var links = [
-      "https://app.powerbi.com/view?r=eyJrIjoiNDYzMTJhYjYtNjY2OS00MjVhLWJkMTctOWY2N2VmNzY0NzJiIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9&pageName=fd95a5a0e5eac2ce8664" // Serviços por Técnicos
+    const links = [
+      "https://app.powerbi.com/view?r=eyJrIjoiNDYzMTJhYjYtNjY2OS00MjVhLWJkMTctOWY2N2VmNzY0NzJiIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9&pageName=c3b12be9b3c58e2d77e6",
+      "https://app.powerbi.com/view?r=eyJrIjoiNDYzMTJhYjYtNjY2OS00MjVhLWJkMTctOWY2N2VmNzY0NzJiIiwidCI6ImZiMmI1MzQ5LTU5MjYtNDU4ZC1iYzA3LTMwZjYxMDhjMjc2OSJ9&pageName=49750493aeb10692c370"
     ];
 
-    var current = 0;
-    var iframe = document.getElementById("dashboard");
+    const INTERVAL_MS = 60000;   // 1 minuto
+    const FADE_MS = 500;         // igual ao CSS
 
-    function mostrarProximoRelatorio() {
-      iframe.src = links[current];
-      current = (current + 1) % links.length;
+    const frameA = document.getElementById("frameA");
+    const frameB = document.getElementById("frameB");
+
+    let visible = frameA;
+    let hidden  = frameB;
+
+    let currentIndex = 0;
+
+    function setVisible(frame) {
+      frame.classList.add("visible");
     }
 
-    mostrarProximoRelatorio();
-    setInterval(mostrarProximoRelatorio, 2200000); // troca a cada 60 segundos
+    function setHidden(frame) {
+      frame.classList.remove("visible");
+    }
+
+    // Carrega a URL no iframe "hidden" e, quando carregar, faz a troca com fade
+    function preloadAndSwap(nextUrl) {
+      // Se já está nessa URL (segurança), não faz nada
+      if (hidden.src === nextUrl) return;
+
+      // Carrega por trás
+      hidden.src = nextUrl;
+
+      // Quando carregar, troca
+      const onLoad = () => {
+        hidden.removeEventListener("load", onLoad);
+
+        // Mostra o hidden e esconde o visible (fade)
+        setVisible(hidden);
+        setHidden(visible);
+
+        // Depois do fade, inverte os papéis (mantém a lógica performática)
+        setTimeout(() => {
+          const temp = visible;
+          visible = hidden;
+          hidden = temp;
+        }, FADE_MS);
+      };
+
+      hidden.addEventListener("load", onLoad, { once: true });
+    }
+
+    function start() {
+      // 1) Mostra a primeira imediatamente
+      visible.src = links[currentIndex];
+      setVisible(visible);
+
+      // 2) Pré-carrega a próxima
+      let nextIndex = (currentIndex + 1) % links.length;
+      hidden.src = links[nextIndex]; // começa carregando antes
+
+      // 3) A cada intervalo, troca para a próxima já pré-carregada e já deixa outra pré-carregando
+      setInterval(() => {
+        // Próxima URL (a que já deve estar carregada no hidden)
+        nextIndex = (currentIndex + 1) % links.length;
+
+        // Garante que o hidden esteja com a próxima URL e faz a troca ao carregar (se já carregou, troca rápido)
+        preloadAndSwap(links[nextIndex]);
+
+        // Avança o índice atual (para calcular a próxima pré-carga)
+        currentIndex = nextIndex;
+
+        // Pré-carrega "a próxima da próxima" assim que a troca ocorrer
+        // (pequeno delay para evitar disputa de rede no exato momento do swap)
+        setTimeout(() => {
+          const afterNext = (currentIndex + 1) % links.length;
+          // hidden será o "antigo visible" após o swap (por isso o delay)
+          // então recarregamos nele o próximo conteúdo
+          hidden.src = links[afterNext];
+        }, FADE_MS + 50);
+
+      }, INTERVAL_MS);
+    }
+
+    start();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
